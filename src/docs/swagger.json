@@ -9,7 +9,7 @@
     }
   },
   "paths": {
-    "/login": {
+    "/api/login": {
       "post": {
         "tags": [
           "Session"
@@ -59,7 +59,7 @@
       }
     },
 
-    "/logout": {
+    "/api/logout": {
       "post": {
         "tags": [
           "Session"
@@ -88,7 +88,7 @@
       }
     },
 
-    "/users": {
+    "/api/users": {
       "post": {
         "tags": [
           "Users"
@@ -126,7 +126,7 @@
       }
     },
 
-    "/habits": {
+    "/api/habits": {
       "get": {
         "tags": [
           "Habits"
@@ -136,9 +136,7 @@
         "operationId": "listHabits",
         "security": [
           {
-            "bearerAuth": [
-              
-            ]
+            "bearerAuth": []
           }
         ],
         "responses": {
@@ -170,6 +168,11 @@
         "summary": "Cria hábito",
         "description": "Cria hábito do usuário",
         "operationId": "createHabit",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -200,7 +203,7 @@
       }
     },
 
-    "/habits/{id_habit}": {
+    "/api/habits/{id_habit}": {
       "delete": {
         "tags": [
           "Habits"
@@ -243,7 +246,7 @@
       }
     },
 
-    "/habits/{id_habit}/occurrences": {
+    "/api/habits/{id_habit}/occurrences": {
       "get": {
         "tags": [
           "Habits Occurrences"
@@ -355,7 +358,7 @@
       }
     },
 
-    "/habits/{id_habit}/occurrences/{id_occurrence}": {
+    "/api/habits/{id_habit}/occurrences/{id_occurrence}": {
       "delete": {
         "tags": [
           "Habits Occurrences"
@@ -528,6 +531,7 @@
         }
       }
     },
+
     "responses": {
       "WrongInfoError": {
         "description": "Alguma informação não foi enviada corretamente",
@@ -585,6 +589,7 @@
         "description": "Você fez muitas requisições em seguida. Aguarde um pouco"
       }
     },
+
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",

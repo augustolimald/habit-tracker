@@ -8,7 +8,7 @@ class Token {
   private secret: string;
 
   constructor() {
-    this.secret = process.env.API_KEY || 'topcaixa';
+    this.secret = process.env.API_KEY || 'habit-tracker';
   }
 
   public generate({ id, ...options }: ITokenGeneration): string {
