@@ -1,0 +1,596 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "API para controle de hábitos",
+    "title": "Habit Tracker",
+    "version": "1.0.0",
+    "contact": {
+      "email": "augustocesar827@gmail.com"
+    }
+  },
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Login",
+        "description": "Realiza login no sistema. Ou informar telefone ou email, mas nunca ambos.",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Login"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/WrongInfoError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
+          }
+        }
+      }
+    },
+
+    "/logout": {
+      "post": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Logout",
+        "description": "Realiza logout do sistema",
+        "operationId": "logout",
+        "security": [
+          {
+            "bearerAuth": [
+              
+            ]
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Logout realizado com sucesso"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+
+    "/users": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Cria usuário",
+        "description": "Cria usuário no sistema",
+        "operationId": "createUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email ou senha inválidos"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+
+    "/habits": {
+      "get": {
+        "tags": [
+          "Habits"
+        ],
+        "summary": "Lista de hábitos",
+        "description": "Lista de hábitos do usuário",
+        "operationId": "listHabits",
+        "security": [
+          {
+            "bearerAuth": [
+              
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de hábitos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Habit"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Habits"
+        ],
+        "summary": "Cria hábito",
+        "description": "Cria hábito do usuário",
+        "operationId": "createHabit",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateHabit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Hábito criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Habit"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Nome ou descrição inválidos"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+
+    "/habits/{id_habit}": {
+      "delete": {
+        "tags": [
+          "Habits"
+        ],
+        "summary": "Deleta hábito",
+        "description": "Deleta hábito do usuário",
+        "operationId": "deleteHabit",
+        "parameters": [
+          {
+            "name": "id_habit",
+            "in": "path",
+            "description": "ID do hábito",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              
+            ]
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Hábito deletado com sucesso"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+
+    "/habits/{id_habit}/occurrences": {
+      "get": {
+        "tags": [
+          "Habits Occurrences"
+        ],
+        "summary": "Lista de ocorrências",
+        "description": "Lista de ocorrências do hábito",
+        "operationId": "listHabitOccurrences",
+        "parameters": [
+          {
+            "name": "id_habit",
+            "in": "path",
+            "description": "ID do hábito",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de ocorrências",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HabitOccurrence"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Habits Occurrences"
+        ],
+        "summary": "Cria ocorrência",
+        "description": "Cria ocorrência do hábito",
+        "operationId": "createHabitOccurrence",
+        "parameters": [
+          {
+            "name": "id_habit",
+            "in": "path",
+            "description": "ID do hábito",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateHabitOccurrence"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              
+            ]
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Ocorrência criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HabitOccurrence"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data inválida"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+
+    "/habits/{id_habit}/occurrences/{id_occurrence}": {
+      "delete": {
+        "tags": [
+          "Habits Occurrences"
+        ],
+        "summary": "Deleta ocorrência",
+        "description": "Deleta ocorrência do hábito",
+        "operationId": "deleteHabitOccurrence",
+        "parameters": [
+          {
+            "name": "id_habit",
+            "in": "path",
+            "description": "ID do hábito",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id_occurrence",
+            "in": "path",
+            "description": "ID da ocorrência",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": [
+              
+            ]
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Ocorrência deletada com sucesso"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        } 
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Session": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "format": "jwt"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "session": {
+            "$ref": "#/components/schemas/Session"
+          }
+        }
+      },
+      "CreateUser": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Fulano"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "format": "1234"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Fulano"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "CreateHabit": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Fazer exercícios"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Habit": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Fazer exercícios"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateHabitOccurrence": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2020-01-01"
+          },
+          "measure": {
+            "type": "number",
+            "example": 1
+          }
+        }
+      },
+      "HabitOccurrence": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "date": {
+            "type": "string",
+            "example": "2020-01-01"
+          },
+          "measure": {
+            "type": "number",
+            "example": 1
+          }
+        }
+      }
+    },
+    "responses": {
+      "WrongInfoError": {
+        "description": "Alguma informação não foi enviada corretamente",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Erro de Validação"
+                },
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "example": "name"
+                      },
+                      "msg": {
+                        "type": "string",
+                        "example": "O campo name é obrigatório"
+                      },
+                      "param": {
+                        "type": "string",
+                        "example": "phone"
+                      },
+                      "location": {
+                        "type": "string",
+                        "example": "body"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "description": "Token inválido."
+      },
+      "ForbiddenError": {
+        "description": "Você não tem permissão para isso"
+      },
+      "NotFoundError": {
+        "description": "Informação não encontrada"
+      },
+      "ConflictError": {
+        "description": "Essa informação já existe em nossa base de dados"
+      },
+      "TooManyRequests": {
+        "description": "Você fez muitas requisições em seguida. Aguarde um pouco"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
