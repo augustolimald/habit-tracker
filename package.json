@@ -10,7 +10,8 @@
     "dev": "ts-node-dev ./src/server.ts",
     "prebuild": "prisma db push",
     "build": "tsc",
-    "postbuild": "cp -r src/app/views build/app"
+    "postbuild": "cp -r src/app/views build/app", 
+    "start": "node build/server.js"
   },
   "dependencies": {
     "@prisma/client": "3.6.0",
